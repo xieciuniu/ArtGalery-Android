@@ -41,6 +41,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -76,13 +77,17 @@ fun Artwork(
 ) {
     Box(modifier = modifier
         .shadow(elevation = 10.dp)
-        .background(color = Color.White),
+        .background(color = Color.White)
+//        .fillMaxWidth(0.8f),
+
     ){
         Image(
             painter = painterResource(picture),
             contentDescription = null,
             modifier = Modifier
                 .padding(20.dp),
+//                .fillMaxWidth(),
+            contentScale = ContentScale.Crop
         )
     }
 }
@@ -92,13 +97,16 @@ fun ArtworkDes(@StringRes des: Int,
                @StringRes autor: Int,
                modifier: Modifier = Modifier
 ){
+
+
     Column(modifier = modifier
         .background(color = Color.LightGray, shape = RoundedCornerShape(CornerSize(10.dp)))
-        .padding(20.dp)
-        .fillMaxWidth(1f)
+        .padding(15.dp)
+        .padding(horizontal = 60.dp)
+//        .fillMaxWidth(1f)
     ) {
         Text(text = stringResource(id = des),
-            fontSize = 25.sp,
+            fontSize = 30.sp,
         )
         Text(text = stringResource(id = autor),
             fontWeight = FontWeight.Bold
@@ -113,7 +121,7 @@ fun Buttons(next:()-> Unit,prev:() -> Unit, modifier: Modifier = Modifier) {
             .fillMaxWidth(1f),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Button(onClick = { prev },
+        Button(onClick = { prev() },
             shape = RoundedCornerShape(CornerSize(15.dp)),
             modifier = Modifier
                 .weight(1f, false)
@@ -123,7 +131,7 @@ fun Buttons(next:()-> Unit,prev:() -> Unit, modifier: Modifier = Modifier) {
 
         }
 
-        Button(onClick = { next },
+        Button(onClick = { next() },
             shape = RoundedCornerShape(corner = CornerSize(15.dp)),
             modifier = Modifier
                 .weight(0.4f, true)
@@ -136,39 +144,41 @@ fun Buttons(next:()-> Unit,prev:() -> Unit, modifier: Modifier = Modifier) {
 
 @Composable
 fun ArtSpace(name: String, modifier: Modifier = Modifier) {
-    Column(verticalArrangement = Arrangement.Center,
+
+    val painters = listOf(R.drawable.mona, R.drawable.gwiazdozbior, R.drawable.krzyk, R.drawable.dziewczyna, R.drawable.narodziny)
+    val names = listOf(R.string.leonardoDaVinci, R.string.vincentVanGogh, R.string.edvardMunch, R.string.johannesVermeer, R.string.sandroBotticelli)
+    val titles = listOf(R.string.monaLisa, R.string.gwizdozbior, R.string.krzyk, R.string.dziewczynaZPerla, R.string.narodzinyWenus)
+
+    var painterNumber by remember { mutableIntStateOf(0) }
+
+    Column(verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier.fillMaxSize()
         ) {
 
-        var number by remember { mutableIntStateOf(1) }
-
-        fun next() {
-            number = 2
-        }
-
-        fun prev() {
-            number = 1
-        }
-
-       @DrawableRes var painting:Int = when(number) {
-            1 -> R.drawable.latarnia
-//            1 -> R.drawable.monalisa
-            else -> R.drawable.monalisa
-        }
-
-        Artwork(picture = painting,
+        Artwork(picture = painters[painterNumber],
             modifier = Modifier.padding(20.dp)
         )
 
-        //Spacer(modifier = Modifier.height(40.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
-        ArtworkDes(des = R.string.latarnia_des,
-            autor = R.string.latarnia_autor,
-            modifier = Modifier.padding(10.dp)
+        ArtworkDes(des = titles[painterNumber],
+            autor = names[painterNumber],
+            modifier = Modifier.padding(20.dp)
         )
 
-        Buttons(next = { next() }, prev = { prev() }, modifier = Modifier.padding(horizontal = 2.dp, vertical = 2.dp))
+        Buttons(next = {
+            if (painterNumber < painters.count() - 1) {
+                painterNumber++
+            } else { painterNumber = 0}
+                       },
+            prev = { if (painterNumber > 0) {
+                painterNumber--
+            } else {
+                painterNumber = painters.count() - 1
+            }
+                   },
+            modifier = Modifier.padding(horizontal = 20.dp))
     }
 }
 

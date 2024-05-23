@@ -2,4 +2,14 @@
     <string name="app_name">Art_Space_app</string>
     <string name="latarnia_des">Latarnia obraz olejny</string>
     <string name="latarnia_autor">Unknown</string>
+    <string name="monaLisa">Mona Lisa</string>
+    <string name="leonardoDaVinci">Leonardo da Vinci</string>
+    <string name="krzyk">Krzyk</string>
+    <string name="dziewczynaZPerla">Dziewczyna z perłą</string>
+    <string name="edvardMunch">Edvard Munch</string>
+    <string name="vincentVanGogh">Vincent van Gogh</string>
+    <string name="johannesVermeer">Johannes Vermeer</string>
+    <string name="narodzinyWenus">Narodziny Wenus</string>
+    <string name="sandroBotticelli">Sandro Botticelli</string>
+    <string name="gwizdozbior">Gwiazdozbiór</string>
 </resources>
