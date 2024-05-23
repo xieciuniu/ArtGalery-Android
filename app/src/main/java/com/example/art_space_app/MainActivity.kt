@@ -30,6 +30,11 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -77,7 +82,7 @@ fun Artwork(
             painter = painterResource(picture),
             contentDescription = null,
             modifier = Modifier
-                .padding(20.dp)
+                .padding(20.dp),
         )
     }
 }
@@ -102,25 +107,27 @@ fun ArtworkDes(@StringRes des: Int,
 }
 
 @Composable
-fun Buttons(modifier: Modifier = Modifier) {
+fun Buttons(next:()-> Unit,prev:() -> Unit, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .fillMaxWidth(1f),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Button(onClick = { /*TODO*/ },
+        Button(onClick = { prev },
             shape = RoundedCornerShape(CornerSize(15.dp)),
             modifier = Modifier
-                .weight(0.5f, false)
+                .weight(1f, false)
+//                .height(20.dp)
             ) {
             Text(text = "Previous")
 
         }
 
-        Button(onClick = { /*TODO*/ },
+        Button(onClick = { next },
             shape = RoundedCornerShape(corner = CornerSize(15.dp)),
             modifier = Modifier
                 .weight(0.4f, true)
+//                .height(20.dp)
         ) {
             Text(text = "Next")
         }
@@ -129,22 +136,39 @@ fun Buttons(modifier: Modifier = Modifier) {
 
 @Composable
 fun ArtSpace(name: String, modifier: Modifier = Modifier) {
-    Column(verticalArrangement = Arrangement.Bottom,
+    Column(verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier.fillMaxSize()
         ) {
-        Artwork(picture = R.drawable.latarnia,
+
+        var number by remember { mutableIntStateOf(1) }
+
+        fun next() {
+            number = 2
+        }
+
+        fun prev() {
+            number = 1
+        }
+
+       @DrawableRes var painting:Int = when(number) {
+            1 -> R.drawable.latarnia
+//            1 -> R.drawable.monalisa
+            else -> R.drawable.monalisa
+        }
+
+        Artwork(picture = painting,
             modifier = Modifier.padding(20.dp)
         )
 
-        Spacer(modifier = Modifier.height(40.dp))
+        //Spacer(modifier = Modifier.height(40.dp))
 
         ArtworkDes(des = R.string.latarnia_des,
             autor = R.string.latarnia_autor,
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier.padding(10.dp)
         )
 
-        Buttons(modifier = Modifier.padding(horizontal = 20.dp, vertical = 20.dp))
+        Buttons(next = { next() }, prev = { prev() }, modifier = Modifier.padding(horizontal = 2.dp, vertical = 2.dp))
     }
 }
 
